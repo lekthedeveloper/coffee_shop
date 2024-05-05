@@ -1,6 +1,7 @@
 import 'package:coffee_shop/routes_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:lottie/lottie.dart';
 
 import '../models/coffee_model.dart';
@@ -92,8 +93,8 @@ class _CoffeePageState extends State<CoffeePage> {
                 onChanged: filterCoffeeList,
                 decoration: InputDecoration(
                   prefixIcon: SizedBox(
-                      height: 20.h,
-                      width: 20.w,
+                      height: 15.h,
+                      width: 15.w,
                       child: Image.asset('assets/images/glass.png')),
                   fillColor: const Color(0xff313131),
                   enabledBorder: OutlineInputBorder(
@@ -123,92 +124,110 @@ class _CoffeePageState extends State<CoffeePage> {
             )
           else
             Expanded(
-              child: ListView.separated(
-                padding: const EdgeInsets.all(0),
-                separatorBuilder: (context, index) => SizedBox(
-                  height: 5.h,
-                ),
-                itemCount: filteredCoffeeList.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.only(left: 10.w, right: 10.w),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.of(context)
-                            .pushNamed(RouteManager.detailsScreen, arguments: {
-                          'title': filteredCoffeeList[index].title,
-                          'price': filteredCoffeeList[index].price,
-                          'extra': filteredCoffeeList[index].extraIngredient,
-                          'image': filteredCoffeeList[index].image,
-                          'description': filteredCoffeeList[index].description,
-                          'rating': filteredCoffeeList[index].rating,
-                          'isFavourite': filteredCoffeeList[index].isFavourite
-                        });
-                      },
-                      child: Container(
-                        height: 50.h,
-                        width: 200.w,
-                        decoration: BoxDecoration(
-                            color: Colors.grey[100],
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(left: 6.w, right: 10.w),
-                              child: const CircleAvatar(
-                                backgroundColor: Color(0xffFFF5EE),
-                                backgroundImage: AssetImage(
-                                  'assets/images/coffee.png',
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 4,
-                              child: Text(
-                                filteredCoffeeList[index].title!,
-                                style: TextStyle(
-                                    fontFamily: 'sora',
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 3,
+              child: AnimationLimiter(
+                child: ListView.separated(
+                  padding: const EdgeInsets.all(0),
+                  separatorBuilder: (context, index) => SizedBox(
+                    height: 5.h,
+                  ),
+                  itemCount: filteredCoffeeList.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.only(left: 10.w, right: 10.w),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pushNamed(
+                              RouteManager.detailsScreen,
+                              arguments: {
+                                'title': filteredCoffeeList[index].title,
+                                'price': filteredCoffeeList[index].price,
+                                'extra':
+                                    filteredCoffeeList[index].extraIngredient,
+                                'image': filteredCoffeeList[index].image,
+                                'description':
+                                    filteredCoffeeList[index].description,
+                                'rating': filteredCoffeeList[index].rating,
+                                'isFavourite':
+                                    filteredCoffeeList[index].isFavourite
+                              });
+                        },
+                        child: AnimationConfiguration.staggeredList(
+                          position: index,
+                          duration: const Duration(milliseconds: 375),
+                          child: SlideAnimation(
+                            horizontalOffset: 50.0,
+                            child: FadeInAnimation(
                               child: Container(
-                                height: 20.h,
-                                width: 100.w,
+                                height: 50.h,
+                                width: 200.w,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  color:
-                                      const Color.fromARGB(148, 224, 224, 224),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    filteredCoffeeList[index].extraIngredient!,
-                                    style: TextStyle(
-                                        fontFamily: 'sora',
-                                        fontSize: 8.sp,
-                                        fontStyle: FontStyle.italic,
-                                        color: const Color.fromARGB(
-                                            255, 133, 128, 128)),
-                                  ),
+                                    color: Colors.grey[100],
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 6.w, right: 10.w),
+                                      child: const CircleAvatar(
+                                        backgroundColor: Color(0xffFFF5EE),
+                                        backgroundImage: AssetImage(
+                                          'assets/images/coffee.png',
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 4,
+                                      child: Text(
+                                        filteredCoffeeList[index].title!,
+                                        style: TextStyle(
+                                            fontFamily: 'sora',
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 3,
+                                      child: Container(
+                                        height: 20.h,
+                                        width: 100.w,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          color: const Color.fromARGB(
+                                              148, 224, 224, 224),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            filteredCoffeeList[index]
+                                                .extraIngredient!,
+                                            style: TextStyle(
+                                                fontFamily: 'sora',
+                                                fontSize: 8.sp,
+                                                fontStyle: FontStyle.italic,
+                                                color: const Color.fromARGB(
+                                                    255, 133, 128, 128)),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: SizedBox(
+                                          height: 20.h,
+                                          width: 20.w,
+                                          child: Image.asset(
+                                              'assets/images/click.png')),
+                                    )
+                                  ],
                                 ),
                               ),
                             ),
-                            Expanded(
-                              flex: 2,
-                              child: SizedBox(
-                                  height: 20.h,
-                                  width: 20.w,
-                                  child:
-                                      Image.asset('assets/images/click.png')),
-                            )
-                          ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
         ],

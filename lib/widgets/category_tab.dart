@@ -1,14 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../business_logic/category_provider.dart';
+
 import '../models/coffee_model.dart';
 import '../models/color_model.dart';
 import 'animated_product_item.dart';
 
-class CoffeeCategoryTab extends StatelessWidget {
-  const CoffeeCategoryTab({super.key});
+class CoffeeCategoryTab extends StatefulWidget {
+  final bool condition;
+  const CoffeeCategoryTab({
+    super.key,
+    this.condition = true,
+  });
+
+  @override
+  State<CoffeeCategoryTab> createState() => _CoffeeCategoryTabState();
+}
+
+class _CoffeeCategoryTabState extends State<CoffeeCategoryTab> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,36 +48,51 @@ class CoffeeCategoryTab extends StatelessWidget {
                   clipBehavior: Clip.none,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () => value.changeTab(
-                          index,
-                          value.categoryBoxColor,
-                          value.textColor,
-                          value.fontWeight),
-                      child: Container(
-                        height: 45.h,
-                        width: 110.w,
-                        decoration: BoxDecoration(
-                            color: value.defaultColor[index]
-                                ? ColorType.buttonColor
-                                : value.categoryBoxColor[index],
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Center(
-                          child: Text(
-                            categories[index].name!,
-                            style: TextStyle(
-                                fontFamily: 'sora',
-                                fontSize: 12.sp,
-                                fontWeight: value.defaultColor[index]
-                                    ? FontWeight.w600
-                                    : value.fontWeight[index],
-                                color: value.defaultColor[index]
-                                    ? Colors.white
-                                    : value.textColor[index]),
+                    if (widget.condition) {
+                      return Shimmer.fromColors(
+                          direction: ShimmerDirection.ltr,
+                          baseColor: Colors.grey[100]!,
+                          highlightColor: Colors.grey[400]!,
+                          child: Container(
+                            height: 45.h,
+                            width: 110.w,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Colors.red,
+                            ),
+                          ));
+                    } else {
+                      return GestureDetector(
+                        onTap: () => value.changeTab(
+                            index,
+                            value.categoryBoxColor,
+                            value.textColor,
+                            value.fontWeight),
+                        child: Container(
+                          height: 45.h,
+                          width: 110.w,
+                          decoration: BoxDecoration(
+                              color: value.defaultColor[index]
+                                  ? ColorType.buttonColor
+                                  : value.categoryBoxColor[index],
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Center(
+                            child: Text(
+                              categories[index].name!,
+                              style: TextStyle(
+                                  fontFamily: 'sora',
+                                  fontSize: 12.sp,
+                                  fontWeight: value.defaultColor[index]
+                                      ? FontWeight.w600
+                                      : value.fontWeight[index],
+                                  color: value.defaultColor[index]
+                                      ? Colors.white
+                                      : value.textColor[index]),
+                            ),
                           ),
                         ),
-                      ),
-                    );
+                      );
+                    }
                   },
                   separatorBuilder: (context, index) => SizedBox(
                         width: 10.w,
@@ -73,6 +105,7 @@ class CoffeeCategoryTab extends StatelessWidget {
           ),
           Expanded(
               child: ProductItemListing(
+            condition: widget.condition,
             listType: context
                 .read<CoffeeCategoryProvider>()
                 .getCappuccinoItems(fetchName),

@@ -48,7 +48,7 @@ final List<CoffeeCategoryModel> categories = [
         title: 'Cappuccino',
         extraIngredient: 'with Oat Milk',
         description:
-            "A 150 ml (5 oz) cappuccino with Oat Milk combines 25 ml of bold espresso, 85 ml of creamy oat milk, and frothy steamed oat milk and foam. This dairy-free variant offers a perfect balance of rich coffee and subtle sweetness from oats, catering to plant-based preferences while maintaining the classic cappuccino experience.",
+            "A 150 ml Oat Milk cappuccino: 25 ml bold espresso, 85 ml creamy oat milk, topped with frothy steamed oat milk. Dairy-free, rich coffee flavor with subtle oat sweetness, perfect for plant-based preferences while keeping the classic cappuccino experience.",
         price: 3.90,
         rating: 4.5,
         isFavourite: false),

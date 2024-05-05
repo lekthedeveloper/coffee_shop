@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:http/http.dart' as http;
@@ -12,22 +11,23 @@ class StripeCheckout {
   bool mounted;
   BuildContext context;
   StripeCheckout({required this.mounted, required this.context});
-  Map<String, dynamic>? paymentIntent;
+  Map<String, dynamic>? _paymentIntent;
+  initiateCheckout(String amount) => _makePayment(amount);
 
-  makePayment() async {
+  _makePayment(String amount) async {
     try {
-      paymentIntent = await createPaymentIntent();
+      _paymentIntent = await _createPaymentIntent(amount);
 
-      if (paymentIntent != null && paymentIntent!['client_secret'] != null) {
+      if (_paymentIntent != null && _paymentIntent!['client_secret'] != null) {
         var gpay = const PaymentSheetGooglePay(
             merchantCountryCode: 'US', currencyCode: 'USD', testEnv: true);
         await Stripe.instance.initPaymentSheet(
             paymentSheetParameters: SetupPaymentSheetParameters(
-                paymentIntentClientSecret: paymentIntent!['client_secret'],
+                paymentIntentClientSecret: _paymentIntent!['client_secret'],
                 style: ThemeMode.light,
                 merchantDisplayName: 'Coffee Shop',
                 googlePay: gpay));
-        if (mounted) displayPaymentSheet(context);
+        if (mounted) _displayPaymentSheet(context);
 
         if (mounted) {
           context.read<NotificationProvider>().orderSuccessNotification();
@@ -41,7 +41,7 @@ class StripeCheckout {
     }
   }
 
-  void displayPaymentSheet(BuildContext context) async {
+  void _displayPaymentSheet(BuildContext context) async {
     try {
       await Stripe.instance.presentPaymentSheet();
       if (mounted) {
@@ -53,9 +53,10 @@ class StripeCheckout {
     }
   }
 
-  createPaymentIntent() async {
+  _createPaymentIntent(String amount) async {
+    final convertEntry = (double.parse(amount) * 100).floor().toString();
     try {
-      Map<String, dynamic> body = {'amount': '152', 'currency': 'USD'};
+      Map<String, dynamic> body = {'amount': convertEntry, 'currency': 'USD'};
 
       http.Response response = await http.post(
           Uri.parse('https://api.stripe.com/v1/payment_intents'),

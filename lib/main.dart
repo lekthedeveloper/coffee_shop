@@ -4,6 +4,7 @@ import 'package:coffee_shop/business_logic/cart_provider.dart';
 import 'package:coffee_shop/business_logic/category_provider.dart';
 import 'package:coffee_shop/business_logic/favourite_provider.dart';
 import 'package:coffee_shop/business_logic/notification_provider.dart';
+import 'package:coffee_shop/business_logic/video_provider.dart';
 import 'package:coffee_shop/screens/screen_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -44,6 +45,7 @@ class MainApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => BottomNavProvider()),
         ChangeNotifierProvider(create: (context) => CartProvider()),
         ChangeNotifierProvider(create: (context) => FavouriteProvider()),
+        ChangeNotifierProvider(create: (context) => VideoProvider()),
         ChangeNotifierProvider(create: (context) => NotificationProvider())
       ],
       builder: (context, child) => const ScreenUtilInit(

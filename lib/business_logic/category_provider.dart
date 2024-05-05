@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class CoffeeCategoryProvider with ChangeNotifier {
   bool condition = true;
-
+  int? sizeIndexRest = 0;
   String name = 'Cappuccino';
   List<String> sized = ['S', 'M', 'L'];
 
@@ -155,7 +155,11 @@ class CoffeeCategoryProvider with ChangeNotifier {
       coffeeSizeBgColor[index] = const Color(0xffFFF5EE);
       coffeeSizeBgColor[1] = Colors.transparent;
       coffeeSizeBgColor[2] = Colors.transparent;
+      coffeSizeDefaultColor[index] = true;
+      coffeSizeDefaultColor[1] = false;
+      coffeSizeDefaultColor[2] = false;
     } else if (index == 1) {
+      sizeIndexRest = index;
       coffeeOutLineColor[index] = ColorType.buttonColor;
       coffSizeTextColor[index] = ColorType.buttonColor;
       coffSizeTextColor[0] = ColorType.coffeeTextColor;
@@ -168,6 +172,7 @@ class CoffeeCategoryProvider with ChangeNotifier {
       coffeSizeDefaultColor[0] = false;
       coffeSizeDefaultColor[2] = false;
     } else if (index == 2) {
+      sizeIndexRest = index;
       coffSizeTextColor[index] = ColorType.buttonColor;
       coffSizeTextColor[0] = ColorType.coffeeTextColor;
       coffSizeTextColor[1] = ColorType.coffeeTextColor;
@@ -180,6 +185,25 @@ class CoffeeCategoryProvider with ChangeNotifier {
       coffeSizeDefaultColor[0] = false;
       coffeSizeDefaultColor[1] = false;
     }
+    notifyListeners();
+  }
+
+/*The function below resets the coffee size selection to its default listing 
+when ever we navigate to another cofee page
+*/
+  coffeeSizeDefaultSettings() {
+    coffeSizeDefaultColor[0] = true;
+    coffeSizeDefaultColor[1] = false;
+    coffeSizeDefaultColor[2] = false;
+    coffeeOutLineColor[0] = ColorType.buttonColor;
+    coffeeOutLineColor[1] = ColorType.coffeeOutLineColor;
+    coffeeOutLineColor[2] = ColorType.coffeeOutLineColor;
+    coffeeSizeBgColor[0] = const Color(0xffFFF5EE);
+    coffeeSizeBgColor[1] = Colors.transparent;
+    coffeeSizeBgColor[2] = Colors.transparent;
+    coffSizeTextColor[0] = ColorType.buttonColor;
+    coffSizeTextColor[1] = ColorType.coffeeTextColor;
+    coffSizeTextColor[2] = ColorType.coffeeTextColor;
     notifyListeners();
   }
 

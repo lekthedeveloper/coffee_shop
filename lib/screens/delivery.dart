@@ -51,7 +51,6 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          //TODO: fit live map
           Positioned(
             left: 0.w,
             top: 0.h,

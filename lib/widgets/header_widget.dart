@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shimmer/shimmer.dart'; // Import the shimmer package
 
 class Header extends StatefulWidget {
   const Header({super.key});
@@ -13,7 +14,22 @@ class Header extends StatefulWidget {
 class _HeaderState extends State<Header> {
   String country = '';
   String state = '';
-  Future<void> _getCurrentLocation() async {
+  bool isLoading = true; // Added boolean to track loading state
+  bool isLocationFetched =
+      false; // Added boolean to track if location is fetched
+
+  @override
+  void initState() {
+    super.initState();
+    requestLocationPermission();
+  }
+
+  Future<void> _fetchLocationData() async {
+    // Check if location is already fetched
+    if (isLocationFetched) {
+      return;
+    }
+
     try {
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.best,
@@ -25,15 +41,16 @@ class _HeaderState extends State<Header> {
       );
 
       if (placemarks.isNotEmpty) {
-        if (mounted) {
-          setState(() {
-            country = placemarks.first.country ?? 'N/A';
-            state = placemarks.first.administrativeArea ?? 'N/A';
-          });
-        }
+        setState(() {
+          country = placemarks.first.country ?? 'N/A';
+          state = placemarks.first.administrativeArea ?? 'N/A';
+          isLoading = false; // Set loading to false
+          isLocationFetched = true; // Set location fetched to true
+        });
       }
     } catch (e) {
       debugPrint("Error getting location: $e");
+      isLoading = false; // Set loading to false on error
     }
   }
 
@@ -45,21 +62,13 @@ class _HeaderState extends State<Header> {
     } else if (permission == LocationPermission.deniedForever) {
       // Handle denied forever permission
     } else {
-      _getCurrentLocation();
+      _fetchLocationData();
       // Permission granted, you can proceed with location-related tasks
     }
   }
 
   @override
-  void initState() {
-    requestLocationPermission();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    debugPrint('$country $state');
-
     return Row(
       children: [
         SizedBox(
@@ -78,41 +87,75 @@ class _HeaderState extends State<Header> {
                     color: const Color(0xffB7B7B7)),
               ),
             ),
-            country == '' && state == ''
-                ? SizedBox(
-                    width: 127.w,
-                  )
-                : Row(
-                    children: [
-                      Text(
-                        '$country, $state',
-                        style: TextStyle(
-                            fontSize: 12.sp,
-                            fontFamily: 'sora',
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xffDDDDDD)),
-                      ),
-                      SizedBox(
-                        width: 4.w,
-                      ),
-                      Image.asset('assets/images/arrow_down.png')
-                    ],
-                  ),
+            // Conditional rendering of Shimmer or Text widget
+            isLoading
+                ? _buildShimmer() // Show shimmer while loading
+                : _buildLocationText(), // Show location text
           ],
         ),
         SizedBox(
-          width: 140.w,
+          width: 141.w,
         ),
-        Container(
-          height: 35.h,
-          width: 40.w,
+        isLoading
+            ? _buildProfileShimmer()
+            : Container(
+                height: 35.h,
+                width: 40.w,
+                decoration: BoxDecoration(
+                    image: const DecorationImage(
+                        fit: BoxFit.fill,
+                        image: AssetImage('assets/images/profile.png')),
+                    borderRadius: BorderRadius.circular(17)),
+              )
+      ],
+    );
+  }
+
+  Widget _buildShimmer() {
+    return SizedBox(
+      width: 127.w,
+      height: 12.h,
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey[700]!,
+        highlightColor: Colors.grey[600]!,
+        child: Container(
           decoration: BoxDecoration(
-              color: Colors.green,
-              image: const DecorationImage(
-                  fit: BoxFit.fill,
-                  image: AssetImage('assets/images/profile.png')),
-              borderRadius: BorderRadius.circular(17)),
-        )
+              color: Colors.white, borderRadius: BorderRadius.circular(15)),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProfileShimmer() {
+    return SizedBox(
+      width: 40.w,
+      height: 35.h,
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey[700]!,
+        highlightColor: Colors.grey[600]!,
+        child: Container(
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(15)),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLocationText() {
+    return Row(
+      children: [
+        Text(
+          '$country, $state',
+          style: TextStyle(
+              fontSize: 12.sp,
+              fontFamily: 'sora',
+              fontWeight: FontWeight.w600,
+              color: const Color(0xffDDDDDD)),
+        ),
+        SizedBox(
+          width: 4.w,
+        ),
+        Image.asset('assets/images/arrow_down.png')
       ],
     );
   }

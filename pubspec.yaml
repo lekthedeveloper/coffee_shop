@@ -9,24 +9,31 @@ environment:
 dependencies:
   animated_text_kit: ^4.2.2
   awesome_notifications: ^0.9.2
+  cherry_toast: ^1.9.0
+  chewie: ^1.7.5
   contained_tab_bar_view: ^0.8.0
   flutter:
     sdk: flutter
   flutter_map: ^6.1.0
   flutter_screenutil: ^5.9.0
+  flutter_staggered_animations: ^1.1.1
   flutter_stripe: ^10.0.0
   fluttertoast: ^8.2.4
   geocoding: ^2.1.1
   geolocator: ^10.1.0
   google_maps_flutter: ^2.5.3
+  hero_animation: ^1.1.4
   http: ^1.2.0
   intl: ^0.19.0
   location: ^5.0.3
   lottie: ^3.0.0
+  marquee: ^2.2.3
   permission_handler: ^11.2.0
   provider: ^6.1.1
   rich_readmore: ^1.1.1
+  shimmer: ^3.0.0
   typewritertext: ^2.3.1
+  video_player: ^2.8.2
 
 dev_dependencies:
   flutter_test:
@@ -39,6 +46,7 @@ flutter:
   assets:
    - assets/images/
    - assets/lottie_files/
+   - assets/video.mp4
   
   fonts:
     - family: Sora

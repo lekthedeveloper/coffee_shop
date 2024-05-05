@@ -34,7 +34,7 @@ class _ExpandableTextWidgetState extends State<ExpandableTextWidget> {
             widget.text,
             textAlign: TextAlign.justify,
             style: TextStyle(
-                fontSize: 12.sp,
+                fontSize: 11.8.sp,
                 fontFamily: 'sora',
                 color: ColorType.extraTextColor),
           ),
